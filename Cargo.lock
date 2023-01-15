@@ -1092,7 +1092,7 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 [[package]]
 name = "livesplit-auto-splitting"
 version = "0.1.0"
-source = "git+https://github.com/savage13/livesplit-core#0f19f39ff019eccd16ac48b36e85ac0011e7436a"
+source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
 dependencies = [
  "anyhow",
  "proc-maps",
@@ -1107,7 +1107,7 @@ dependencies = [
 [[package]]
 name = "livesplit-core"
 version = "0.13.0"
-source = "git+https://github.com/savage13/livesplit-core#0f19f39ff019eccd16ac48b36e85ac0011e7436a"
+source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
 dependencies = [
  "base64-simd",
  "bytemuck",
@@ -1140,7 +1140,7 @@ dependencies = [
 [[package]]
 name = "livesplit-hotkey"
 version = "0.7.0"
-source = "git+https://github.com/savage13/livesplit-core#0f19f39ff019eccd16ac48b36e85ac0011e7436a"
+source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
 dependencies = [
  "bitflags",
  "cfg-if",
@@ -1176,7 +1176,7 @@ dependencies = [
 [[package]]
 name = "livesplit-title-abbreviations"
 version = "0.3.0"
-source = "git+https://github.com/savage13/livesplit-core#0f19f39ff019eccd16ac48b36e85ac0011e7436a"
+source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
 dependencies = [
  "unicase",
 ]
