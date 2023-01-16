@@ -3,7 +3,7 @@
 mod config;
 mod stream_markers;
 
-use std::sync::{Arc, RwLock, RwLockWriteGuard};
+use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 use crate::config::Config;
 use bytemuck::{Pod, Zeroable};
@@ -19,38 +19,37 @@ static GLOBAL: MiMalloc = MiMalloc;
 struct WTimer(Arc<RwLock<Timer>>);
 
 impl WTimer {
-    /*
     pub fn save_state(&self) {
         let timer_state = self.read().timer_state();
         std::fs::write("timer_state.json", timer_state.to_json()).unwrap();
     }
-     */
+
     pub fn load_state(&mut self) {
         if let Some(timer_state) = livesplit_core::TimerState::from_file("timer_state.json") {
             println!("loading timer state in timer_state.json");
             self.write().replace_state(&timer_state);
         }
     }
-    /*
+
     pub fn reset(&mut self) {
         self.write().reset(true);
-        self.save_state();
+        //self.save_state();
     }
     pub fn skip_split(&mut self) {
         self.write().skip_split();
-        self.save_state();
+        //self.save_state();
     }
     pub fn undo_split(&mut self) {
         self.write().undo_split();
-        self.save_state();
+        //self.save_state();
     }
     pub fn pause(&mut self) {
         self.write().toggle_pause();
-        self.save_state();
+        //self.save_state();
     }
     pub fn split_or_start(&mut self) {
         self.write().split_or_start();
-        self.save_state();
+        //self.save_state();
     }
     pub fn switch_to_next_comparison(&mut self) {
         self.write().switch_to_next_comparison();
@@ -61,15 +60,14 @@ impl WTimer {
     pub fn turn_off_comparison(&mut self) {
         self.write().set_current_comparison("None").unwrap();
     }
-     */
+
     fn write(&self) -> RwLockWriteGuard<'_, Timer> {
         self.0.write().unwrap()
     }
-    /*
+
     fn read(&self) -> RwLockReadGuard<'_, Timer> {
         self.0.read().unwrap()
     }
-     */
 }
 
 fn main() {
@@ -118,7 +116,14 @@ fn main() {
     let mut buf = Vec::new();
 
     wtimer.load_state(); //load_state(&mut timer.write().unwrap());
-    dbg!("loop");
+
+    wtimer.0.write().unwrap().save_state(); //load_state(&mut timer.write().unwrap());
+
+    let fps: f64 = 40.0;
+    let spf: u64 = (1_000_000.0 * 1.0 / fps).floor() as u64;
+    dbg!(spf);
+    window.limit_update_rate(Some(std::time::Duration::from_micros(25_000)));
+
     while window.is_open() {
         if let Some((_, val)) = window.get_scroll_wheel() {
             if val > 0.0 {
@@ -133,7 +138,7 @@ fn main() {
         {
             config.save_splits(&wtimer.0.read().unwrap());
         }
-        /*
+
         if window.is_key_pressed(Key::Space, KeyRepeat::No) {
             wtimer.split_or_start();
         }
@@ -158,7 +163,7 @@ fn main() {
         if window.is_key_pressed(Key::Down, KeyRepeat::No) {
             wtimer.turn_off_comparison();
         }
-        */
+
         let (width, height) = window.get_size();
         if width != 0 && height != 0 {
             {
