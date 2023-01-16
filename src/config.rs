@@ -35,6 +35,7 @@ struct General {
     timing_method: Option<TimingMethod>,
     comparison: Option<String>,
     auto_splitter: Option<PathBuf>,
+    use_global_hotkeys: Option<bool>,
 }
 
 #[derive(Default, Deserialize)]
@@ -89,7 +90,9 @@ impl Config {
         run.fix_splits();
         Some(run)
     }
-
+    pub fn use_global_hotkeys(&self) -> bool {
+        self.general.use_global_hotkeys.unwrap_or(false)
+    }
     pub fn parse_run_or_default(&self) -> Run {
         self.parse_run().unwrap_or_else(|| {
             let mut run = Run::new();

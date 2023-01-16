@@ -84,7 +84,9 @@ fn main() {
     let auto_splitter = auto_splitting::Runtime::new(timer.clone());
     config.maybe_load_auto_splitter(&auto_splitter);
 
-    let _hotkey_system = config.create_hotkey_system(timer.clone());
+    if config.use_global_hotkeys() {
+        let _hotkey_system = config.create_hotkey_system(timer.clone());
+    }
 
     let mut layout = config.parse_layout_or_default();
     for comp in &mut layout.components {
@@ -117,8 +119,6 @@ fn main() {
 
     wtimer.load_state(); //load_state(&mut timer.write().unwrap());
 
-    wtimer.0.write().unwrap().save_state(); //load_state(&mut timer.write().unwrap());
-
     let fps: f64 = 40.0;
     let spf: u64 = (1_000_000.0 * 1.0 / fps).floor() as u64;
     dbg!(spf);
@@ -138,32 +138,32 @@ fn main() {
         {
             config.save_splits(&wtimer.0.read().unwrap());
         }
-
-        if window.is_key_pressed(Key::Space, KeyRepeat::No) {
-            wtimer.split_or_start();
+        if !config.use_global_hotkeys() {
+            if window.is_key_pressed(Key::Space, KeyRepeat::No) {
+                wtimer.split_or_start();
+            }
+            if window.is_key_pressed(Key::P, KeyRepeat::No) {
+                wtimer.pause();
+            }
+            if window.is_key_pressed(Key::R, KeyRepeat::No) {
+                wtimer.reset();
+            }
+            if window.is_key_pressed(Key::U, KeyRepeat::No) {
+                wtimer.undo_split();
+            }
+            if window.is_key_pressed(Key::S, KeyRepeat::No) {
+                wtimer.skip_split();
+            }
+            if window.is_key_pressed(Key::Left, KeyRepeat::No) {
+                wtimer.switch_to_previous_comparison();
+            }
+            if window.is_key_pressed(Key::Right, KeyRepeat::No) {
+                wtimer.switch_to_next_comparison();
+            }
+            if window.is_key_pressed(Key::Down, KeyRepeat::No) {
+                wtimer.turn_off_comparison();
+            }
         }
-        if window.is_key_pressed(Key::P, KeyRepeat::No) {
-            wtimer.pause();
-        }
-        if window.is_key_pressed(Key::R, KeyRepeat::No) {
-            wtimer.reset();
-        }
-        if window.is_key_pressed(Key::U, KeyRepeat::No) {
-            wtimer.undo_split();
-        }
-        if window.is_key_pressed(Key::S, KeyRepeat::No) {
-            wtimer.skip_split();
-        }
-        if window.is_key_pressed(Key::Left, KeyRepeat::No) {
-            wtimer.switch_to_previous_comparison();
-        }
-        if window.is_key_pressed(Key::Right, KeyRepeat::No) {
-            wtimer.switch_to_next_comparison();
-        }
-        if window.is_key_pressed(Key::Down, KeyRepeat::No) {
-            wtimer.turn_off_comparison();
-        }
-
         let (width, height) = window.get_size();
         if width != 0 && height != 0 {
             {
