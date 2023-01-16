@@ -1092,7 +1092,7 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 [[package]]
 name = "livesplit-auto-splitting"
 version = "0.1.0"
-source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
+source = "git+https://github.com/savage13/livesplit-core#d46a188641b9be8b7d5b3cd5bccedf1ad5bb122e"
 dependencies = [
  "anyhow",
  "proc-maps",
@@ -1107,7 +1107,7 @@ dependencies = [
 [[package]]
 name = "livesplit-core"
 version = "0.13.0"
-source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
+source = "git+https://github.com/savage13/livesplit-core#d46a188641b9be8b7d5b3cd5bccedf1ad5bb122e"
 dependencies = [
  "base64-simd",
  "bytemuck",
@@ -1140,7 +1140,7 @@ dependencies = [
 [[package]]
 name = "livesplit-hotkey"
 version = "0.7.0"
-source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
+source = "git+https://github.com/savage13/livesplit-core#d46a188641b9be8b7d5b3cd5bccedf1ad5bb122e"
 dependencies = [
  "bitflags",
  "cfg-if",
@@ -1176,7 +1176,7 @@ dependencies = [
 [[package]]
 name = "livesplit-title-abbreviations"
 version = "0.3.0"
-source = "git+https://github.com/savage13/livesplit-core#7b8aa750a4c33223f7db016e1ed000b5ca84a898"
+source = "git+https://github.com/savage13/livesplit-core#d46a188641b9be8b7d5b3cd5bccedf1ad5bb122e"
 dependencies = [
  "unicase",
 ]
@@ -2213,6 +2213,7 @@ version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d634a985c4d4238ec39cacaed2e7ae552fbd3c476b552c1deac3021b7d7eaf0c"
 dependencies = [
+ "itoa",
  "libc",
  "num_threads",
 ]
