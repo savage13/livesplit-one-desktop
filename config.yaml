@@ -1,4 +1,7 @@
 general:
+  # splits: The Legend of Zelda Breath of the Wild - Bunnies.lss
+  use-global-hotkeys: false
+  # splits: ../bokotimer/Celeste - Any% (1.2.1.5).lss
   # splits: C:\Users\Christopher Serr\Documents\Splits\Celeste - Any% (1.3.1.2).lss
   # splits: C:\Users\Christopher Serr\Documents\Splits\Portal - Inbounds.lss
   # splits: C:\Users\Christopher Serr\Documents\Splits\8dj.lss
@@ -14,6 +17,8 @@ general:
   # layout: C:\Users\Christopher Serr\Documents\Splits\All.lsl
   # layout: C:\Users\Christopher Serr\Documents\Splits\sva_layout.ls1l
 
+  layout: layout.json
+  fill-splits-with-space: true
   # comparison: Average Segments
 
   # timing-method: GameTime
@@ -29,17 +34,34 @@ general:
   # auto-splitter: C:\Projekte\auto-splitter-language\assemblyscript-auto-splitter\build\optimized.wasm
   # auto-splitter: C:\Projekte\one-offs\csharp-auto-splitters\output.wasm
 
+
 window:
-  # width: 1500
-  # height: 50
+  width: 180
+  height: 320
   always-on-top: true
   transparency: true
   # fps: 40
 
-# hotkeys:
-#   # split: null
-#   undo_all_pauses: NumPad7
-#   toggle_timing_method: NumPad9
+hotkeys:
+  split: Space
+  pause: P
+  reset: R
+  undo: U
+  skip: S
+  previous_comparison: ArrowLeft
+  next_comparison: ArrowRight
+  toggle_timing_method: T
+  #  next_comparision: Right
+  #  toggle_timing_method: Down
+  #  undo_all_pauses: NumPad7
+
+keys:
+  layout_up: ArrowUp
+  layout_down: ArrowDown
+  open: Ctrl+O
+  save: Ctrl+S
+  hide: Ctrl+T
+  quit: Ctrl+Q
 
 # connections:
   # twitch: puttheaccesstokenhere
