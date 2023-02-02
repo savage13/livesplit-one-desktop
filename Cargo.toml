@@ -24,9 +24,9 @@ tokio = { version = "1.6.1", features = ["rt-multi-thread"] }
 twitch-stream-markers = { path = "twitch-stream-markers" }
 lazy_static = "1.4"
 clap = { version = "4.1.1", features = ["derive"] }
-winit = { version = "0.27.5", default-features = false, features = ["serde"]}
+winit = { version = "0.27.5", default-features = false, features = ["serde","x11"]}
 softbuffer = { git = "https://github.com/rust-windowing/softbuffer" }
-rfd = "0.10.0"
+rfd = { version = "0.10.0", default-features = false, features = ["xdg-portal"]
 
 
 # Slightly optimize the transpose function to inline everything.
