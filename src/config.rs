@@ -98,9 +98,21 @@ impl Config {
             ..Default::default()
         }
     }
+    pub fn config_file() -> PathBuf {
+        if let Some(base_dirs) = directories::BaseDirs::new() {
+            let mut path = base_dirs.preference_dir().to_path_buf();
+            path.push("livesplit_one_prefs.yaml");
+            path
+        } else {
+            println!("Error finding Home directory, preferences will not be saved, using defaults");
+            let mut path = PathBuf::new();
+            path.push("livesplit_one_prefs.yaml");
+            path
+        }
+    }
     pub fn save_config(&self) {
         let data = serde_yaml::to_string(self).unwrap();
-        fs::write("config_save.yaml", data).unwrap();
+        fs::write(Self::config_file(), data).unwrap();
     }
     pub fn state_file(&self) -> PathBuf {
         self.general.state_file.clone()
@@ -108,7 +120,10 @@ impl Config {
     pub fn set_state_file(&mut self, path: &Path) {
         self.general.state_file = path.to_path_buf();
     }
-    pub fn parse(path: impl AsRef<Path>) -> Option<Config> {
+    pub fn parse() -> Option<Config> {
+        Self::parse_config(Self::config_file())
+    }
+    pub fn parse_config(path: impl AsRef<Path>) -> Option<Config> {
         let buf = fs::read(path).ok()?;
         serde_yaml::from_slice(&buf).ok()
     }

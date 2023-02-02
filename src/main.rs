@@ -278,7 +278,7 @@ fn key_code(input: &KeyboardInput, pressed: bool) -> Option<VirtualKeyCode> {
 }
 
 fn main() {
-    *config_mut() = Config::parse("config_save.yaml").unwrap_or_default();
+    *config_mut() = Config::parse().unwrap_or_default();
     config().setup_logging();
     let args = Args::parse();
     if args.global_hotkeys {

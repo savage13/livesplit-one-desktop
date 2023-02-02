@@ -27,7 +27,7 @@ clap = { version = "4.1.1", features = ["derive"] }
 winit = { version = "0.27.5", default-features = false, features = ["serde","x11"]}
 softbuffer = { git = "https://github.com/rust-windowing/softbuffer" }
 rfd = { version = "0.10.0", default-features = false, features = ["xdg-portal"] }
-
+directories = "4.0.1"
 
 # Slightly optimize the transpose function to inline everything.
 [profile.dev.package."livesplit-one"]
