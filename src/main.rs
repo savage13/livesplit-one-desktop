@@ -8,12 +8,16 @@ use config::Config;
 use keys::Key;
 
 use bytemuck::{Pod, Zeroable};
+use clap::Parser;
 use lazy_static::lazy_static;
+use livesplit_core::layout;
+use livesplit_core::layout::LayoutSettings;
 use livesplit_core::{auto_splitting, rendering::software::Renderer};
 use livesplit_core::{layout::Layout, layout::LayoutState};
 use livesplit_core::{SharedTimer, Timer};
 use rfd::FileDialog;
 use std::collections::HashMap;
+use std::io::Cursor;
 use std::path::PathBuf;
 use std::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use winit::event::ElementState;
@@ -49,6 +53,7 @@ enum Action {
     HideComparison,
     OpenSplits,
     SaveSplits,
+    OpenLayout,
     Quit,
     LayoutUp,
     LayoutDown,
@@ -134,11 +139,13 @@ impl WTimer {
         let use_global_hotkeys = config().use_global_hotkeys();
         let mut keys: HashMap<Key, Action> = HashMap::new();
 
+        // Default Value for key commands
         let list = [
             ("open", "Ctrl+O", Action::OpenSplits),
             ("save", "Ctrl+S", Action::SaveSplits),
             ("quit", "Ctrl+Q", Action::Quit),
             ("hide", "Ctrl+T", Action::HideComparison),
+            ("layout", "Ctrl+L", Action::OpenLayout),
             ("layout_up", "ArrowUp", Action::LayoutUp),
             ("layout_down", "ArrowDown", Action::LayoutDown),
         ];
@@ -176,6 +183,22 @@ impl WTimer {
         };
         self.action(&action);
     }
+    fn open_layout(&mut self) -> Result<(), ()> {
+        let path = pick_layout_file().ok_or(())?;
+        let file = std::fs::read_to_string(&path).or(Err(()))?;
+        if let Ok(settings) = LayoutSettings::from_json(Cursor::new(&file)) {
+            self.layout = Layout::from_settings(settings);
+        } else if let Ok(layout) = layout::parser::parse(&file) {
+            self.layout = layout;
+        } else {
+            println!("Error parsing layout");
+            return Ok(());
+        }
+        config_mut().set_layout_path(&path);
+        config().save_config();
+
+        Ok(())
+    }
     fn action(&mut self, action: &Action) {
         match action {
             Action::Split => self.split_or_start(),
@@ -195,6 +218,7 @@ impl WTimer {
                     config().save_config();
                 }
             }
+            Action::OpenLayout => self.open_layout().unwrap_or(()),
             Action::ToggleTimingMethod => self.toggle_timing_method(),
             Action::Quit => {} //self.skip_split(),
             _ => unimplemented!("{:?}", action),
@@ -207,6 +231,12 @@ fn pick_splits_file() -> Option<PathBuf> {
         .set_directory(".")
         .pick_file()
 }
+fn pick_layout_file() -> Option<PathBuf> {
+    FileDialog::new()
+        .add_filter("layout", &["json", "ls1l"])
+        .set_directory(".")
+        .pick_file()
+}
 
 fn config() -> RwLockReadGuard<'static, Config> {
     CONFIG.read().unwrap()
@@ -214,8 +244,6 @@ fn config() -> RwLockReadGuard<'static, Config> {
 fn config_mut() -> RwLockWriteGuard<'static, Config> {
     CONFIG.write().unwrap()
 }
-
-use clap::Parser;
 
 #[derive(Debug, Parser)]
 #[command(author, version, about, long_about = None)]

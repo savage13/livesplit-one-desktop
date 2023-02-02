@@ -62,6 +62,7 @@ keys:
   save: Ctrl+S
   hide: Ctrl+T
   quit: Ctrl+Q
+  layout: Ctrl+L
 
 # connections:
   # twitch: puttheaccesstokenhere

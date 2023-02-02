@@ -142,6 +142,9 @@ impl Config {
         self.general.timing_method == Some(TimingMethod::GameTime)
     }
 
+    pub fn set_layout_path(&mut self, path: &PathBuf) {
+        self.general.layout = Some(path.clone());
+    }
     pub fn parse_layout(&self) -> Option<Layout> {
         let path = self.general.layout.as_ref()?;
         let file = fs::read_to_string(path).ok()?;
