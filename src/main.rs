@@ -177,7 +177,7 @@ impl WTimer {
     }
     fn handle_keypress(&mut self, key: Key) {
         let action = if let Some(action) = self.keys.get(&key) {
-            action.clone()
+            *action
         } else {
             return;
         };
@@ -264,12 +264,8 @@ struct Args {
 
 fn scroll_up(delta: &MouseScrollDelta) -> bool {
     match delta {
-        MouseScrollDelta::LineDelta(y, ..) => {
-            return y < &0.0;
-        }
-        MouseScrollDelta::PixelDelta(winit::dpi::PhysicalPosition { y, .. }) => {
-            return y < &0.0;
-        }
+        MouseScrollDelta::LineDelta(y, ..) => y < &0.0,
+        MouseScrollDelta::PixelDelta(winit::dpi::PhysicalPosition { y, .. }) => y < &0.0,
     }
 }
 
@@ -330,20 +326,20 @@ fn main() {
                 WindowEvent::CloseRequested { .. } => control_flow.set_exit(),
                 WindowEvent::Resized(_size) => {}
                 WindowEvent::MouseWheel { delta, .. } => {
-                    if scroll_up(&delta) {
+                    if scroll_up(delta) {
                         wtimer.layout.scroll_up();
                     } else {
                         wtimer.layout.scroll_down();
                     }
                 }
                 WindowEvent::KeyboardInput { input, .. } => {
-                    if let Some(key) = key_code(&input, true) {
+                    if let Some(key) = key_code(input, true) {
                         let key = Key::from(key, modifiers);
                         wtimer.handle_keypress(key)
                     }
                 }
                 WindowEvent::ModifiersChanged(mods) => {
-                    modifiers = mods.clone();
+                    modifiers = *mods;
                 }
                 _ => {}
             },

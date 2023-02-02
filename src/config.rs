@@ -105,8 +105,8 @@ impl Config {
     pub fn state_file(&self) -> PathBuf {
         self.general.state_file.clone()
     }
-    pub fn set_state_file(&mut self, path: &PathBuf) {
-        self.general.state_file = path.clone()
+    pub fn set_state_file(&mut self, path: &Path) {
+        self.general.state_file = path.to_path_buf();
     }
     pub fn parse(path: impl AsRef<Path>) -> Option<Config> {
         let buf = fs::read(path).ok()?;
@@ -142,8 +142,8 @@ impl Config {
         self.general.timing_method == Some(TimingMethod::GameTime)
     }
 
-    pub fn set_layout_path(&mut self, path: &PathBuf) {
-        self.general.layout = Some(path.clone());
+    pub fn set_layout_path(&mut self, path: &Path) {
+        self.general.layout = Some(path.to_path_buf());
     }
     pub fn parse_layout(&self) -> Option<Layout> {
         let path = self.general.layout.as_ref()?;
@@ -160,8 +160,8 @@ impl Config {
     pub fn splits_path(&self) -> Option<PathBuf> {
         self.general.splits.clone()
     }
-    pub fn set_splits_path(&mut self, path: &PathBuf) {
-        self.general.splits = Some(path.clone());
+    pub fn set_splits_path(&mut self, path: &Path) {
+        self.general.splits = Some(path.to_path_buf());
     }
 
     pub fn create_hotkey_system(&self, timer: SharedTimer) -> Option<HotkeySystem> {
@@ -252,39 +252,49 @@ impl Config {
     }
 
     pub fn reset_key(&self) -> Hotkey {
-        self.hotkeys.reset.unwrap_or("Numpad3".parse().unwrap())
+        self.hotkeys
+            .reset
+            .unwrap_or_else(|| "Numpad3".parse().unwrap())
     }
     pub fn split_key(&self) -> Hotkey {
-        self.hotkeys.split.unwrap_or("Numpad1".parse().unwrap())
+        self.hotkeys
+            .split
+            .unwrap_or_else(|| "Numpad1".parse().unwrap())
     }
     pub fn undo_key(&self) -> Hotkey {
-        self.hotkeys.undo.unwrap_or("Numpad8".parse().unwrap())
+        self.hotkeys
+            .undo
+            .unwrap_or_else(|| "Numpad8".parse().unwrap())
     }
     pub fn skip_key(&self) -> Hotkey {
-        self.hotkeys.skip.unwrap_or("Numpad2".parse().unwrap())
+        self.hotkeys
+            .skip
+            .unwrap_or_else(|| "Numpad2".parse().unwrap())
     }
     pub fn pause_key(&self) -> Hotkey {
-        self.hotkeys.pause.unwrap_or("Numpad5".parse().unwrap())
+        self.hotkeys
+            .pause
+            .unwrap_or_else(|| "Numpad5".parse().unwrap())
     }
     pub fn undo_all_key(&self) -> Hotkey {
         self.hotkeys
             .undo_all_pauses
-            .unwrap_or("Numpad7".parse().unwrap())
+            .unwrap_or_else(|| "Numpad7".parse().unwrap())
     }
     pub fn prev_key(&self) -> Hotkey {
         self.hotkeys
             .previous_comparison
-            .unwrap_or("Numpad4".parse().unwrap())
+            .unwrap_or_else(|| "Numpad4".parse().unwrap())
     }
     pub fn next_key(&self) -> Hotkey {
         self.hotkeys
             .next_comparison
-            .unwrap_or("Numpad6".parse().unwrap())
+            .unwrap_or_else(|| "Numpad6".parse().unwrap())
     }
     pub fn toggle_timing_method_key(&self) -> Hotkey {
         self.hotkeys
             .toggle_timing_method
-            .unwrap_or("Numpad9".parse().unwrap())
+            .unwrap_or_else(|| "Numpad9".parse().unwrap())
     }
     pub fn keys(&self) -> &HashMap<String, Hotkey> {
         &self.keys
