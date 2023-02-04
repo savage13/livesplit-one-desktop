@@ -4,6 +4,9 @@ mod config;
 pub mod keys;
 mod stream_markers;
 
+mod notifier;
+use notifier::Notifier;
+
 use config::Config;
 use keys::Key;
 
@@ -30,6 +33,9 @@ use winit::event_loop::EventLoop;
 
 lazy_static! {
     static ref CONFIG: RwLock<Config> = RwLock::new(Config::new());
+}
+lazy_static! {
+    static ref NOTIFIER: RwLock<Notifier> = RwLock::new(Notifier::new());
 }
 
 struct WTimer {
@@ -62,6 +68,19 @@ enum Action {
 pub fn save_state(timer_state: &livesplit_core::TimerState) {
     let path = config().state_file();
     std::fs::write(&path, timer_state.to_json()).unwrap();
+    // Send a message to a websocket
+    send_message(&format!(
+        "{:?} {} {}",
+        &timer_state.action, &timer_state.phase, &timer_state.split_name
+    ));
+}
+
+pub fn send_message(s: &str) {
+    NOTIFIER.write().unwrap().send(s);
+}
+
+pub fn close_notifier() {
+    NOTIFIER.write().unwrap().close();
 }
 
 impl WTimer {
@@ -318,6 +337,8 @@ fn main() {
     let mut buf = Vec::new();
 
     let mut modifiers: ModifiersState = ModifiersState::empty();
+
+    send_message("init");
 
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_poll();
